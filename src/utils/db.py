@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import aiosqlite
 
 
@@ -10,6 +11,9 @@ class Database:
 
     async def connect(self) -> None:
         if self._conn is None:
+            # Ensure parent directory exists to avoid 'unable to open database file'
+            parent_dir = os.path.dirname(self._path) or "."
+            os.makedirs(parent_dir, exist_ok=True)
             self._conn = await aiosqlite.connect(self._path)
             await self._conn.execute("PRAGMA foreign_keys = ON;")
             await self._conn.commit()
