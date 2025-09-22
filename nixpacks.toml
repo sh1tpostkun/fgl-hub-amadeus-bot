@@ -1,14 +1,17 @@
-stage-0
-RUN python3 -m pip install --upgrade pip
-146ms
-/root/.nix-profile/bin/python3: No module named pip
-Dockerfile:20
--------------------
-18 |     ENV NIXPACKS_PATH=/opt/venv/bin:$NIXPACKS_PATH
-19 |     COPY . /app/.
-20 | >>> RUN --mount=type=cache,id=s/fa19c70a-106e-408f-9c0c-2cd0b6cad2f9-/root/cache/pip,target=/root/.cache/pip python3 -m pip install --upgrade pip
-21 |     RUN --mount=type=cache,id=s/fa19c70a-106e-408f-9c0c-2cd0b6cad2f9-/root/cache/pip,target=/root/.cache/pip python3 -m pip install -r requirements.txt
-22 |
--------------------
-ERROR: failed to build: failed to solve: process "/bin/bash -ol pipefail -c python3 -m pip install --upgrade pip" did not complete successfully: exit code: 1
-Error: Docker build failed
+[phases.setup]
+nixPkgs = [
+  "python311",
+  "python311Packages.pip",
+  "python311Packages.setuptools",
+  "python311Packages.wheel"
+]
+
+[phases.install]
+cmds = [
+  "python3 -m venv /opt/venv",
+  "/opt/venv/bin/python -m pip install --upgrade pip",
+  "/opt/venv/bin/pip install -r requirements.txt"
+]
+
+[start]
+cmd = "/opt/venv/bin/python main.py"
