@@ -1,0 +1,19 @@
+services:
+  - type: worker
+    name: amadeus-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: GUILD_ID
+        sync: false
+      - key: OWNER_IDS
+        sync: false
+      - key: PREFIX
+        value: "!"
+      - key: LOG_LEVEL
+        value: "INFO"
+      - key: DB_PATH
+        value: "bot.db"
